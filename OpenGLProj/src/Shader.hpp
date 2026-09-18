@@ -20,6 +20,7 @@ private:
 		}
 		string buffer;
 		while (getline(file, buffer)) {
+			cout << buffer << endl;
 			source += buffer + "\n";
 		}
 		return true;
@@ -28,6 +29,7 @@ private:
 public:
 	Shader(const string& filepath,GLenum type) {
 		ID = glCreateShader(type);
+		cout << "Creating shader: " << ID << endl;
 		string tempSource = "";
 		if (!GetSource(filepath, tempSource)) {
 			cout << "Unable to create shader" << endl;
@@ -35,7 +37,18 @@ public:
 		}
 		const char* tempSourceChar = tempSource.c_str();
 		glShaderSource(ID, 1, &tempSourceChar, NULL);
+
 		glCompileShader(ID);
+		GLint success;
+		glGetShaderiv(ID, GL_COMPILE_STATUS, &success);
+
+		if (!success) {
+			char infoLog[512];
+			glGetShaderInfoLog(ID, 512, NULL, infoLog);
+
+			cout << "Shader compilation failed:\n";
+			cout << infoLog << endl;
+		}
 	}
 
 	GLuint GetID() const {
@@ -44,6 +57,7 @@ public:
 
 	~Shader() {
 		if (ID != 0) {
+			cout << "Deleting shader" << endl;
 			glDeleteShader(ID);
 		}
 	}

@@ -8,10 +8,18 @@
 class ShaderProgram {
 private:
 	GLuint ID = 0;
-
+	
 public:
-	ShaderProgram(const string& VertexFP, const string& FragmentFP) {
+	ShaderProgram(){}
+
+	void New(const string& VertexFP, const string& FragmentFP) {
+		if (ID != 0) {
+			glDeleteProgram(ID);
+		}
+
 		ID = glCreateProgram();
+
+		cout << "Creating program: " << ID << endl;
 
 		Shader vertex(VertexFP, GL_VERTEX_SHADER);
 		Shader fragment(FragmentFP, GL_FRAGMENT_SHADER);
@@ -45,12 +53,22 @@ public:
 	ShaderProgram(const ShaderProgram&) = delete;
 	ShaderProgram& operator=(const ShaderProgram&) = delete;
 
+	void Bind() const {
+		glUseProgram(ID);
+	}
+
+	void Unbind() const {
+		glUseProgram(0);
+	}
+
 	GLuint GetID() const {
 		return ID;
 	}
 
 	~ShaderProgram() {
 		if (ID != 0) {
+			cout << "Deleting program" << endl;
+			Unbind();
 			glDeleteProgram(ID);
 		}
 	}
