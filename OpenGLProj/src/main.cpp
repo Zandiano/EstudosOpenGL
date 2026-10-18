@@ -50,48 +50,59 @@ int main() {
 		0,1,2, 
 		2,3,0, 
 	}; 
-	
-	Object square(vertices, indices, GL_STATIC_DRAW, "default.vert", "default.frag"); 
-	Object square2(vertices, indices, GL_STATIC_DRAW, "default.vert", "default.frag");
-	
-	square.transform.scale.Set(0.5f, 0.5f, 1.0f); 
-	square2.transform.scale.Set(0.3f, 0.3f, 1.0f); 
-	
-	square2.transform.position.Set(0.8f, 0.8f, 0.0f);
 
-	Uniform<GLfloat, 4> color(square.ShaderID(), "u_color");
-	Uniform<GLfloat, 4> color2(square2.ShaderID(), "u_color");
+	vector<GLfloat> vertices2 = {
+		 -0.0f, -0.25f, 0.0f,
+		 -0.25f, 0.25f, 0.0f,
+		 0.25f, 0.25f, 0.0f,
+	};
+	vector<GLuint> indices2{
+		0,1,2
+	};
 
-	color.Set(0.5f, 0.2f, 0.8f, 1.0f);
-	color2.Set(0.1f, 0.1f, 0.2f, 1.0f);
+	{
 
-	color.Update(square.ShaderID());
-	color2.Update(square2.ShaderID());
+		Object square(vertices, indices, GL_STATIC_DRAW, "default.vert", "default.frag");
+		Object square2(vertices2, indices2, GL_STATIC_DRAW, "default.vert", "default.frag");
 
-	float cameraPos[3] = { 0,0,0 }; 
-	while (!glfwWindowShouldClose(window)) { 
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f); 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-		cameraPos[1] += 0.01f * abs(glfwGetKey(window, GLFW_KEY_W)); 
-		cameraPos[1] -= 0.01f * abs(glfwGetKey(window, GLFW_KEY_S)); 
-		
-		cameraPos[0] += 0.01f * abs(glfwGetKey(window, GLFW_KEY_D)); 
-		cameraPos[0] -= 0.01f * abs(glfwGetKey(window, GLFW_KEY_A)); 
+		square.transform.scale.Set(0.5f, 0.5f, 1.0f);
+		square2.transform.scale.Set(0.3f, 0.3f, 1.0f);
 
-		cameraPos[2] -= 0.01f * abs(glfwGetKey(window, GLFW_KEY_E));
-		cameraPos[2] += 0.01f * abs(glfwGetKey(window, GLFW_KEY_Q));
+		square2.transform.position.Set(0.8f, 0.8f, 0.0f);
 
-		square.transform.position.Set(cameraPos[0], cameraPos[1], cameraPos[2]);
-		square.Update(cameraPos);
-		square2.Update(cameraPos); 
-		square.Draw(); 
-		square2.Draw(); 
+		Uniform<GLfloat, 4> color(square.ShaderID(), "u_color");
+		Uniform<GLfloat, 4> color2(square2.ShaderID(), "u_color");
 
-		glfwSwapBuffers(window); 
-		glfwPollEvents(); 
+		color.Set(0.5f, 0.2f, 0.8f, 1.0f);
+		color2.Set(0.1f, 0.1f, 0.2f, 1.0f);
+
+		color.Update(square.ShaderID());
+		color2.Update(square2.ShaderID());
+
+		float cameraPos[3] = { 0,0,0 };
+		while (!glfwWindowShouldClose(window)) {
+			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			cameraPos[1] += 0.01f * abs(glfwGetKey(window, GLFW_KEY_W));
+			cameraPos[1] -= 0.01f * abs(glfwGetKey(window, GLFW_KEY_S));
+
+			cameraPos[0] += 0.01f * abs(glfwGetKey(window, GLFW_KEY_D));
+			cameraPos[0] -= 0.01f * abs(glfwGetKey(window, GLFW_KEY_A));
+
+			cameraPos[2] -= 0.01f * abs(glfwGetKey(window, GLFW_KEY_E));
+			cameraPos[2] += 0.01f * abs(glfwGetKey(window, GLFW_KEY_Q));
+
+			square.transform.position.Set(cameraPos[0], cameraPos[1], cameraPos[2]);
+			square.Update(cameraPos);
+			square2.Update(cameraPos);
+			square.Draw();
+			square2.Draw();
+
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
 	}
 
-	glfwDestroyWindow(window); 
 	glfwTerminate(); 
 	return 0; 
 }

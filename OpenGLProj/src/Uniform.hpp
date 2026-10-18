@@ -10,7 +10,7 @@ using namespace std;
 template <typename T, int size>
 class Uniform {
 private:
-	GLuint loc = 0;
+	GLint loc = 0;
 	array<T,size> value;
 public:
 	Uniform(T fill = 0) {
